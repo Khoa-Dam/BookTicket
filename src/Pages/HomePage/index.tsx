@@ -7,7 +7,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import AirportInput from "../../components/Homepage/AirportInput";
 
 const links = [
-    { name: 'Đặt vé', href: '/' },
+    { name: 'Đặt vé', href: '/bookingPage' },
     { name: 'Gửi hành lý', href: '' },
 ];
 
