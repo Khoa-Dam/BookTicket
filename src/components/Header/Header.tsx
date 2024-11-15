@@ -28,6 +28,15 @@ export default function Header() {
             <ul className="flex justify-center items-center flex-col lg:flex-row list-none lg:ml-auto center">
               <li className="nav-item">
                 <Link
+                  className="px-2 py-1.5 flex items-center text-xs uppercase font-bold leading-snug hover:opacity-75 border-2 rounded-md border-blue-200 mr-2"
+                  to="/Support"
+                >
+                  Hỗ trợ
+                </Link>
+              </li>
+
+              <li className="nav-item">
+                <Link
                   className="px-2 py-1.5 flex items-center text-xs uppercase font-bold leading-snug hover:opacity-75 border-2 rounded-md border-blue-200 "
                   to="/SignUp"
                 >

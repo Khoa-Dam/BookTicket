@@ -7,6 +7,8 @@ import './index.css';
 import SignUp from './Pages/SignUp';
 import SignInSide from './Pages/SignIn';
 import BookingPage from './Pages/BookingPage';
+import Support from './Pages/Support';
+import FlyBookingForm from './Pages/FlyBookingForm';
 
 const router = createMemoryRouter([
   {
@@ -28,8 +30,17 @@ const router = createMemoryRouter([
       },
       {
         path: "/BookingPage",
-        element: <BookingPage />
-      }
+        element: <BookingPage />,
+
+      },
+      {
+        path: "/FlyBookingForm",
+        element: <FlyBookingForm />
+      },
+      {
+        path: "/Support",
+        element: <Support />
+      },
     ]
   },
 

@@ -22,8 +22,8 @@ endOfToday.setSeconds(endOfToday.getSeconds() - 1);
 
 
 export default function HomePage() {
-    const [departure, setDeparture] = React.useState<string>("");
-    const [destination, setDestination] = React.useState<string>("");
+    const [departure, setDeparture] = React.useState<string>("HCM (SGN)");
+    const [destination, setDestination] = React.useState<string>("Hà Nội (HAN");
     const [showDepartureDropdown, setShowDepartureDropdown] = React.useState<boolean>(false);
     const [showDestinationDropdown, setShowDestinationDropdown] = React.useState<boolean>(false);
     const [searchDeparture, setSearchDeparture] = React.useState<string>("HCM (SGN)");
@@ -31,6 +31,7 @@ export default function HomePage() {
     const [errorMessagedep, setErrorMessagedep] = React.useState<string>("");
     const [errorMessagedis, setErrorMessagedis] = React.useState<string>("");
     const [errorMessagedate, setErrorMessagedate] = React.useState<string>("");
+    const [showError, setShowError] = useState(false);
     const [departureDate, setDepartureDate] = useState<Date | null>(null);
     const navigate = useNavigate();
 
@@ -58,6 +59,10 @@ export default function HomePage() {
         }
         if (searchDeparture === searchDestination) {
             setErrorMessagedep("Departure và Destination không thể giống nhau!");
+            return false;
+        }
+        if (!departureDate) {
+            setErrorMessagedate("Vui lòng chọn ngày cất cánh.");
             return false;
         }
 
@@ -92,84 +97,113 @@ export default function HomePage() {
 
     const handleExpandedSearch = () => {
         // Lưu thông tin đã chọn và chuyển sang trang tìm kiếm mở rộng
-        console.log("Tìm kiếm mở rộng", { departureDate, origin, destination });
-        navigate("/expanded-search", { state: { departureDate, origin, destination } });
+        console.log("Tìm kiếm mở rộng", { departureDate, departure, destination });
+        navigate("/BookingPage", { state: { departureDate, departure, destination } });
     };
 
+    const handleSearchClick = (event: any) => {
+        event.preventDefault();
+        if (checkInputs()) {
+            handleExpandedSearch();
+        } else {
+            setShowError(true); // Hiển thị thông báo lỗi
+        }
+    };
     useEffect(() => {
         // Check inputs based on selected departure and destination
         checkInputs();
-    }, [searchDeparture, searchDestination]);
+    }, [searchDeparture, searchDestination, departureDate]);
 
     return (
-        <div className="relative isolate overflow-hidden py-24 sm:py-20 w-full min-h-screen flex flex-col md:flex-row">
-            <video autoPlay muted loop className='absolute w-screen h-95 object-cover opacity-3 top-0 left-0 bottom-0 right-0 '>
-                <source src={videoHomepage} type="video/mp4" />
-            </video>
-            <div className="absolute ml-44 mt-12 max-w-full px-6 lg:px-8 flex-col items-center justify-center">
-                <div className='relative'>
-                    <div className="max-w-2xl lg:mx-0  ">
-                        <h2 className="text-base font-bold tracking-tight text-white sm:text-3xl ">BOOK YOUR FLIGHT</h2>
-                        <p className="mt-3 text-lg leading-5 text-white">Đưa bạn đến bất cứ đâu</p>
-                    </div>
-                    <div className="mx-auto mt-5 max-w-2xl lg:mx-0 lg:max-w-none">
-                        <div className="grid grid-cols-1 gap-x-8 gap-y-6 text-base font-semibold leading-7 text-white sm:grid-cols-2 md:flex lg:gap-x-10">
-                            {links.map((link) => (
-                                <Link key={link.name} to={link.href} className='transition-transform duration-300 ease-in-out hover:translate-x-0.5 hover:text-[#1c89e3]'>
-                                    {link.name} <span aria-hidden="true">&rarr;</span>
-                                </Link>
-                            ))}
+        <div className="min-h-screen bg-white">
+            <main className="relative isolate overflow-hidden py-24 sm:py-20 w-full min-h-screen flex flex-col md:flex-row">
+                <video autoPlay muted loop className='absolute w-screen h-95 object-cover opacity-3 top-0 left-0 bottom-0 right-0 '>
+                    <source src={videoHomepage} type="video/mp4" />
+                </video>
+                <div className="absolute ml-44 mt-12 max-w-full px-6 lg:px-8 flex-col items-center justify-center">
+                    <div className='relative'>
+                        <div className="max-w-2xl lg:mx-0  ">
+                            <h2 className="text-base font-bold tracking-tight text-white sm:text-3xl ">BOOK YOUR FLIGHT</h2>
+                            <p className="mt-3 text-lg leading-5 text-white">Đưa bạn đến bất cứ đâu</p>
                         </div>
-                    </div>
-                    <form className='relative px-8 py-8 bg-white-color rounded-xl grid grid-cols-3 gap-4' >
-                        <div className='col-span-2 flex justify-center space-x-5'>
-                            <div className='flex justify-center'>
-                                <AirportInput
-                                    label="Đi từ"
-                                    placeholder="Nhập vào điểm đi"
-                                    value={searchDeparture}
-                                    onFocus={() => setShowDepartureDropdown(true)} // Hiện dropdown khi focus
-                                    onBlur={() => handleBlur("departure")}
-                                    onChange={(event) => onInputChange(event, "departure")}
-                                    showDropdown={showDepartureDropdown}
-                                    onSelect={(selectedAirport) => handleAirportSelect(selectedAirport, "departure")}
-                                    errorMessage={errorMessagedep}
-                                    icon={FaPlaneDeparture}
-                                />
-                                <div className='flex items-center w-6 h-6 relative top-1/2 mx-4'>
-                                    <Icon />
-                                </div>
-                                <AirportInput
-                                    label="Đến"
-                                    placeholder="Nhập điểm muốn đến"
-                                    value={searchDestination}
-                                    onFocus={() => setShowDestinationDropdown(true)} // Hiện dropdown khi focus
-                                    onBlur={() => handleBlur("destination")}
-                                    onChange={(event) => onInputChange(event, "destination")}
-                                    showDropdown={showDestinationDropdown}
-                                    onSelect={(selectedAirport) => handleAirportSelect(selectedAirport, "destination")}
-                                    errorMessage={errorMessagedis}
-                                    icon={FaPlaneArrival}
-                                />
+                        <div className="mx-auto mt-5 max-w-2xl lg:mx-0 lg:max-w-none">
+                            <div className="grid grid-cols-1 gap-x-8 gap-y-6 text-base font-semibold leading-7 text-white sm:grid-cols-2 md:flex lg:gap-x-10">
+                                {links.map((link) => (
+                                    <Link key={link.name} to={link.href} className='transition-transform duration-300 ease-in-out hover:translate-x-0.5 hover:text-[#1c89e3]'>
+                                        {link.name} <span aria-hidden="true">&rarr;</span>
+                                    </Link>
+                                ))}
                             </div>
                         </div>
-                        <div className='grid grid-row-2 gap-1 '>
-                            <DatePickerComponent
-                                selectedDate={departureDate}
-                                onDateChange={setDepartureDate}
-                            />
-                            {errorMessagedate && <p className="absolute rounded-md p-2 text- -top-16 max- bg-black text-white">{errorMessagedate}</p>}
-                        </div>
-                        <button
-                            onClick={handleExpandedSearch}
-                            className="col-span-3 mt-4 px-4 py-2 bg-[#fc615c] text-white font-semibold rounded-lg hover:bg-[#e0440e] transition duration-200"
-                        >
-                            Tìm chuyến bay
-                        </button>
-                    </form>
+                        <form className='relative px-8 py-8 bg-white-color rounded-xl grid grid-cols-3 gap-4' >
+                            <div className='col-span-2 flex justify-center space-x-5'>
+                                <div className='flex justify-center'>
+                                    <AirportInput
+                                        label="Đi từ"
+                                        placeholder="Nhập vào điểm đi"
+                                        value={searchDeparture}
+                                        onFocus={() => setShowDepartureDropdown(true)} // Hiện dropdown khi focus
+                                        onBlur={() => handleBlur("departure")}
+                                        onChange={(event) => onInputChange(event, "departure")}
+                                        showDropdown={showDepartureDropdown}
+                                        onSelect={(selectedAirport) => handleAirportSelect(selectedAirport, "departure")}
+                                        errorMessage={errorMessagedep}
+                                        icon={FaPlaneDeparture}
+                                    />
+                                    <div className='flex items-center w-6 h-6 relative top-1/2 mx-4'>
+                                        <Icon />
+                                    </div>
+                                    <AirportInput
+                                        label="Đến"
+                                        placeholder="Nhập điểm muốn đến"
+                                        value={searchDestination}
+                                        onFocus={() => setShowDestinationDropdown(true)} // Hiện dropdown khi focus
+                                        onBlur={() => handleBlur("destination")}
+                                        onChange={(event) => onInputChange(event, "destination")}
+                                        showDropdown={showDestinationDropdown}
+                                        onSelect={(selectedAirport) => handleAirportSelect(selectedAirport, "destination")}
+                                        errorMessage={errorMessagedis}
+                                        icon={FaPlaneArrival}
+                                    />
+                                </div>
+                            </div>
+                            <div className='grid grid-row-2 gap-1 '>
+                                <DatePickerComponent
+                                    selectedDate={departureDate}
+                                    onDateChange={setDepartureDate}
+                                    errorMessage={errorMessagedate}
+                                />
+
+                            </div>
+                            <div className="relative w-full left-60">
+                                <button
+                                    onClick={handleSearchClick}
+                                    className=" mt-4 px-4 py-2 bg-[#fc615c] text-white font-semibold rounded-lg hover:bg-[#e0440e] transition duration-200"
+                                >
+                                    Tìm chuyến bay
+                                </button>
+                                {/* Modal hiển thị thông báo lỗi */}
+                                {showError && (
+                                    <div className="fixed inset-0 flex items-center justify-center z-50">
+                                        <div className="bg-black bg-opacity-50 fixed inset-0"></div>
+                                        <div className="bg-white p-8 rounded-lg shadow-lg relative z-10 max-w-md mx-auto">
+                                            <h2 className="text-lg font-bold mb-4">Lỗi</h2>
+                                            <p className="text-gray-700 mb-4">Vui lòng kiểm tra các trường nhập liệu.</p>
+                                            <button
+                                                onClick={() => setShowError(false)} // Đóng modal khi nhấn nút
+                                                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 transition"
+                                            >
+                                                Đóng
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
-            <div className="p-14"></div>
+            </main>
         </div>
+
     );
 }

@@ -46,8 +46,8 @@ const AirportInput = ({
                         onSelect={onSelect}
                     />
                 )}
-                <div className=''>
-                    {errorMessage && <p className="absolute rounded-md p-2 text-white bg-gray-600 -top-20">{errorMessage}<div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full border-t-8 border-t-gray-600 border-l-8 border-l-transparent border-r-8 border-r-transparent"></div></p>
+                <div>
+                    {errorMessage && <p className="absolute rounded-md p-2 text-white bg-gray-600 -top-20 max-w-max">{errorMessage}<div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full border-t-8 border-t-gray-600 border-l-8 border-l-transparent border-r-8 border-r-transparent"></div></p>
                     }
                 </div>
             </div>
