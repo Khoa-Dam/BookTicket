@@ -9,6 +9,7 @@ import SignInSide from './Pages/SignIn';
 import BookingPage from './Pages/BookingPage';
 import Support from './Pages/Support';
 import FlyBookingForm from './Pages/FlyBookingForm';
+import Payment from './Pages/Payment';
 
 const router = createMemoryRouter([
   {
@@ -40,6 +41,10 @@ const router = createMemoryRouter([
       {
         path: "/Support",
         element: <Support />
+      },
+      {
+        path: "/Payment",
+        element: <Payment />
       },
     ]
   },

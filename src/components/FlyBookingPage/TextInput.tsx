@@ -7,9 +7,10 @@ interface TextInputProps {
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     required?: boolean;
     helperText?: string;
+    error?: string;
 }
 
-const TextInput: React.FC<TextInputProps> = ({ label, name, value, onChange, required = false, helperText }) => {
+const TextInput: React.FC<TextInputProps> = ({ label, name, value, onChange, required = false, helperText, error }) => {
     return (
         <div>
             <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
@@ -26,6 +27,7 @@ const TextInput: React.FC<TextInputProps> = ({ label, name, value, onChange, req
                 required={required}
             />
             {helperText && <p className="mt-1 text-sm text-gray-500">{helperText}</p>}
+            {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
         </div>
     );
 };

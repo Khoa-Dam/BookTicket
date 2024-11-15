@@ -12,9 +12,10 @@ type FormData = {
 interface ContactFormProps {
     formData: FormData;
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    errors: { [key: string]: string };
 }
 
-const ContactForm: React.FC<ContactFormProps> = ({ formData, handleInputChange }) => {
+const ContactForm: React.FC<ContactFormProps> = ({ formData, handleInputChange, errors }) => {
     return (
         <>
             <div className="flex justify-between items-center mb-6">
@@ -29,6 +30,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ formData, handleInputChange }
                         onChange={handleInputChange}
                         required
                         helperText="Như CMND (không dấu)"
+                        error={errors.lastName}
                     />
                     <TextInput
                         label="Tên Đệm & Tên (vd: Dam Ngoc Khoa)"
@@ -37,6 +39,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ formData, handleInputChange }
                         onChange={handleInputChange}
                         required
                         helperText="Như CMND (không dấu)"
+                        error={errors.firstName}
                     />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -64,6 +67,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ formData, handleInputChange }
                             />
                         </div>
                         <p className="mt-1 text-sm text-gray-500">VD: +84 366567466 trong đó (+84) là mã quốc gia và 366567466 là số di động</p>
+                        {errors.phone && <p className="mt-1 text-sm text-red-500">{errors.phone}</p>}
                     </div>
                     <TextInput
                         label="Email"
@@ -72,6 +76,7 @@ const ContactForm: React.FC<ContactFormProps> = ({ formData, handleInputChange }
                         onChange={handleInputChange}
                         required
                         helperText="VD: email@example.com"
+                        error={errors.email}
                     />
                 </div>
             </form>

@@ -9,9 +9,10 @@ interface PassengerInfoProps {
         nationality?: string;
     };
     handleInputInfor: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+    errors: { [key: string]: string };
 }
 
-const PassengerInfo: React.FC<PassengerInfoProps> = ({ forminfor, handleInputInfor }) => {
+const PassengerInfo: React.FC<PassengerInfoProps> = ({ forminfor, handleInputInfor, errors }) => {
     return (
         <div className="mb-6">
             <div className="flex justify-between items-center mb-6">
@@ -41,6 +42,7 @@ const PassengerInfo: React.FC<PassengerInfoProps> = ({ forminfor, handleInputInf
                         onChange={handleInputInfor}
                         required
                         helperText="Như CMND (không dấu)"
+                        error={errors.lastName}
                     />
 
                     <TextInput
@@ -50,6 +52,7 @@ const PassengerInfo: React.FC<PassengerInfoProps> = ({ forminfor, handleInputInf
                         onChange={handleInputInfor}
                         required
                         helperText="Như CMND (không dấu)"
+                        error={errors.firstName}
                     />
                 </div>
 
@@ -63,6 +66,7 @@ const PassengerInfo: React.FC<PassengerInfoProps> = ({ forminfor, handleInputInf
                         value={forminfor.nationality}
                         onChange={handleInputInfor}
                         className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 rounded-md"
+
                     >
                         <option value="">Chọn quốc tịch</option>
                         <option value="VN">Việt Nam</option>
@@ -72,6 +76,7 @@ const PassengerInfo: React.FC<PassengerInfoProps> = ({ forminfor, handleInputInf
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 pt-6">
                         <ChevronDown className="h-4 w-4 text-gray-400" />
                     </div>
+                    {errors.nationality && <p className="mt-1 text-sm text-red-500">{errors.nationality}</p>}
                 </div>
             </div>
         </div>
