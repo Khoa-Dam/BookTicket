@@ -1,21 +1,25 @@
-import React, { useEffect } from "react";
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
 import videoHomepage from "../../assets/video.mp4";
 import { FaPlaneDeparture, FaPlaneArrival } from "react-icons/fa";
 import Icon from '../../components/Homepage/icon';
-import Datepicker from "react-tailwindcss-datepicker";
 import AirportInput from "../../components/Homepage/AirportInput";
+import DatePickerComponent from "../../components/Homepage/DatePicker";
 
 const links = [
     { name: 'Đặt vé', href: '/' },
     { name: 'Gửi hành lý', href: '' },
 ];
 
-const MIN_DATE = new Date();
-MIN_DATE.setDate(MIN_DATE.getDate());
+const now = new Date();
+const startOfToday = new Date();
+startOfToday.setHours(0, 0, 0, 0);
 
-const MAX_DATE = new Date();
-MAX_DATE.setDate(MAX_DATE.getDate() + 4);
+const endOfToday = new Date(startOfToday);
+endOfToday.setDate(endOfToday.getDate() + 1);
+endOfToday.setSeconds(endOfToday.getSeconds() - 1);
+
+
 
 export default function HomePage() {
     const [departure, setDeparture] = React.useState<string>("");
@@ -27,7 +31,9 @@ export default function HomePage() {
     const [errorMessagedep, setErrorMessagedep] = React.useState<string>("");
     const [errorMessagedis, setErrorMessagedis] = React.useState<string>("");
     const [errorMessagedate, setErrorMessagedate] = React.useState<string>("");
-    const [value, setValue] = React.useState({ startDate: null });
+    const [departureDate, setDepartureDate] = useState<Date | null>(null);
+    const navigate = useNavigate();
+
 
     const handleAirportSelect = (selectedAirport: string, type: "departure" | "destination") => {
         if (type === "departure") {
@@ -54,9 +60,7 @@ export default function HomePage() {
             setErrorMessagedep("Departure và Destination không thể giống nhau!");
             return false;
         }
-        if (value) {
-            setErrorMessagedate("Vui lòng chọn ngày đi.");
-        }
+
         setErrorMessagedep("");
         setErrorMessagedis("");
         setErrorMessagedate("");
@@ -73,8 +77,6 @@ export default function HomePage() {
             setSearchDestination(value);
             setShowDestinationDropdown(true); // Hiện dropdown khi có giá trị
         }
-
-        // Check inputs after updating search value
         checkInputs();
     };
 
@@ -88,19 +90,10 @@ export default function HomePage() {
         }, 150);
     };
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault(); // Prevent page refresh
-        if (checkInputs()) {
-            // Gather data to send
-            const formData = {
-                departure: searchDeparture,
-                destination: searchDestination,
-                date: value,
-            };
-            console.log("Form Data Submitted:", formData);
-            // Here you can add code to send the data to an API or another component
-            // Example: axios.post('/api/submit', formData)
-        }
+    const handleExpandedSearch = () => {
+        // Lưu thông tin đã chọn và chuyển sang trang tìm kiếm mở rộng
+        console.log("Tìm kiếm mở rộng", { departureDate, origin, destination });
+        navigate("/expanded-search", { state: { departureDate, origin, destination } });
     };
 
     useEffect(() => {
@@ -128,7 +121,7 @@ export default function HomePage() {
                             ))}
                         </div>
                     </div>
-                    <form className='relative px-8 py-8 bg-white-color rounded-xl grid grid-cols-3 gap-4' onSubmit={handleSubmit}>
+                    <form className='relative px-8 py-8 bg-white-color rounded-xl grid grid-cols-3 gap-4' >
                         <div className='col-span-2 flex justify-center space-x-5'>
                             <div className='flex justify-center'>
                                 <AirportInput
@@ -160,38 +153,19 @@ export default function HomePage() {
                                 />
                             </div>
                         </div>
-                        <div className='grid grid-row-2 gap-1'>
-                            <label htmlFor='date' className='block text-text-color'>Ngày đi:</label>
-                            <Datepicker
-                                primaryColor={"blue"}
-                                asSingle={true}
-                                value={value.startDate}
-                                minDate={MIN_DATE}
-                                maxDate={MAX_DATE}
-                                configs={{
-                                    shortcuts: {
-                                        yesterday: "Yesterday",
-                                        customToday: {
-                                            text: "Custom Today",
-                                            period: {
-                                                start: new Date(),
-                                                end: new Date()
-                                            }
-                                        },
-                                        next8Days: {
-                                            text: "Next 8 days",
-                                            period: {
-                                                start: new Date(new Date().setDate(new Date().getDate() + 1)),
-                                                end: new Date(new Date().setDate(new Date().getDate() + 8))
-                                            }
-                                        }
-                                    },
-                                }}
-                                onChange={newValue => setValue(newValue?.startDate)}
-                                displayFormat="DD/MM/YYYY"
+                        <div className='grid grid-row-2 gap-1 '>
+                            <DatePickerComponent
+                                selectedDate={departureDate}
+                                onDateChange={setDepartureDate}
                             />
                             {errorMessagedate && <p className="absolute rounded-md p-2 text- -top-16 max- bg-black text-white">{errorMessagedate}</p>}
                         </div>
+                        <button
+                            onClick={handleExpandedSearch}
+                            className="col-span-3 mt-4 px-4 py-2 bg-[#fc615c] text-white font-semibold rounded-lg hover:bg-[#e0440e] transition duration-200"
+                        >
+                            Tìm chuyến bay
+                        </button>
                     </form>
                 </div>
             </div>

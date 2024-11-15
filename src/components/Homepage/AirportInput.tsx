@@ -28,7 +28,7 @@ const AirportInput = ({
 }: AirportInputProps) => {
     return (
         <div className='grid grid-row-2 gap-1'>
-            <label className='block text-text-color'>{label}</label>
+            <label className='text-sm font-semibold text-gray-600'>{label}</label>
             <div className='relative'>
                 <Icon className='absolute top-1 -left-2' />
                 <input
