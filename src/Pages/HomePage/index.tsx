@@ -7,7 +7,7 @@ import AirportInput from "../../components/Homepage/AirportInput";
 import DatePickerComponent from "../../components/Homepage/DatePicker";
 
 const links = [
-    { name: 'Đặt vé', href: '/' },
+    { name: 'Đặt vé', href: '/bookingPage' },
     { name: 'Gửi hành lý', href: '' },
 ];
 

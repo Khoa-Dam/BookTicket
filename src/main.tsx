@@ -6,7 +6,7 @@ import { RootLayout } from './RootLayout';
 import './index.css';
 import SignUp from './Pages/SignUp';
 import SignInSide from './Pages/SignIn';
-import ExpandedSearchPage from './Pages/ExpandedSearch';
+import BookingPage from './Pages/BookingPage';
 
 const router = createMemoryRouter([
   {
@@ -26,6 +26,10 @@ const router = createMemoryRouter([
         path: "/SignIn",
         element: <SignInSide />
       },
+      {
+        path: "/BookingPage",
+        element: <BookingPage />
+      }
     ]
   },
 
